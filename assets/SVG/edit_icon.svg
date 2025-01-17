@@ -1,0 +1,12 @@
+<svg width="40" height="40" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+<g id="Group 102">
+<path id="Vector" fill-rule="evenodd" clip-rule="evenodd" d="M21.9155 22.5928L17.0862 23.5882L17.7849 18.3885L21.9155 22.5928ZM13.4891 10.6233H20.9337L18.2723 13.5695H13.6193C13.4873 13.5695 13.3876 13.6704 13.3876 13.8044V26.5776H26.0104C26.135 26.5776 26.2422 26.4692 26.2422 26.3427V22.4114L29.1537 19.472V26.3427C29.1537 28.0225 27.6704 29.5238 26.0104 29.5238H12.2134C11.2584 29.5238 10.4761 28.5977 10.4761 27.634V13.8044C10.4761 12.1318 11.8366 10.6233 13.4891 10.6233ZM19.3091 16.8157L25.1618 10.6271C25.3382 10.4787 25.5145 10.4215 25.718 10.5393L29.4066 14.1537C29.5529 14.3322 29.5826 14.5381 29.3765 14.7467L23.4371 21.023L19.3091 16.8157Z" fill="white"/>
+<rect id="Rectangle 20" x="0.5" y="0.5" width="39" height="39" rx="19.5" fill="white" fill-opacity="0.1" stroke="url(#paint0_linear_114_15)"/>
+</g>
+<defs>
+<linearGradient id="paint0_linear_114_15" x1="20" y1="0" x2="20" y2="40" gradientUnits="userSpaceOnUse">
+<stop stop-color="white" stop-opacity="0.2"/>
+<stop offset="1" stop-color="white" stop-opacity="0.1"/>
+</linearGradient>
+</defs>
+</svg>

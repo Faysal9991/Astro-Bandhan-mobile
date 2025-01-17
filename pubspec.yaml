@@ -1,0 +1,105 @@
+name: astrologerapp
+description: "A new Flutter project."
+# The following line prevents the package from being accidentally published to
+# pub.dev using `flutter pub publish`. This is preferred for private packages.
+publish_to: 'none' # Remove this line if you wish to publish to pub.dev
+
+# The following defines the version and build number for your application.
+# A version number is three numbers separated by dots, like 1.2.43
+# followed by an optional build number separated by a +.
+# Both the version and the builder number may be overridden in flutter
+# build by specifying --build-name and --build-number, respectively.
+# In Android, build-name is used as versionName while build-number used as versionCode.
+# Read more about Android versioning at https://developer.android.com/studio/publish/versioning
+# In iOS, build-name is used as CFBundleShortVersionString while build-number is used as CFBundleVersion.
+# Read more about iOS versioning at
+# https://developer.apple.com/library/archive/documentation/General/Reference/InfoPlistKeyReference/Articles/CoreFoundationKeys.html
+# In Windows, build-name is used as the major, minor, and patch parts
+# of the product and file versions while build-number is used as the build suffix.
+version: 1.0.0+1
+
+environment:
+  sdk: ^3.5.4
+
+# Dependencies specify other packages that your package needs in order to work.
+# To automatically upgrade your package dependencies to the latest versions
+# consider running `flutter pub upgrade --major-versions`. Alternatively,
+# dependencies can be manually updated by changing the version numbers below to
+# the latest version available on pub.dev. To see which dependencies have newer
+# versions available, run `flutter pub outdated`.
+dependencies:
+  flutter:
+    sdk: flutter
+
+  # The following adds the Cupertino Icons font to your application.
+  # Use with the CupertinoIcons class for iOS style icons.
+  cupertino_icons: ^1.0.8
+  dropdown_button2: ^2.3.9
+  animated_custom_dropdown: 3.1.1
+  flutter_svg: ^2.0.4
+  drop_down_list: ^0.0.8
+  passwordfield: ^0.2.0
+  flutter_bloc: ^8.0.1
+  dio: ^5.0.0
+  intl: ^0.20.0
+  shared_preferences: ^2.1.0
+  equatable: ^2.0.7
+  socket_io_client: ^3.0.2
+  flutter_local_notifications: ^18.0.1
+  provider: ^6.1.2
+  #  permission_handler: ^10.4.1
+  permission_handler: ^11.3.1
+  # Agora Flutter SDK, please use the latest version
+  agora_rtc_engine: ^6.0.0
+  audioplayers: ^6.1.0
+  image_picker: ^1.1.2
+  cached_network_image: ^3.4.1
+  photo_view: ^0.14.0
+
+dev_dependencies:
+    flutter_test:
+      sdk: flutter
+    flutter_lints: ^5.0.0
+
+flutter:
+    uses-material-design: true
+    fonts:
+      - family: Poppins
+        fonts:
+          - asset: assets/fonts/Poppins-Regular.ttf
+          - asset: assets/fonts/Poppins-Bold.ttf
+          - asset: assets/fonts/Poppins-Thin.ttf
+          - asset: assets/fonts/Poppins-ExtraLight.ttf
+          - asset: assets/fonts/Poppins-Light.ttf
+    assets:
+      - assets/img/
+      - assets/img/background_home.png
+      - assets/img/astroBandhan.png
+      - assets/img/OBJECTS.png
+      - assets/img/ScreenBG.png
+      - assets/img/image.png
+      - assets/img/image2.png
+      - assets/img/image3.png
+      - assets/img/image4.png
+      - assets/SVG/
+      - assets/SVG/Menu.svg
+      - assets/SVG/Search.svg
+      - assets/SVG/wallet.svg
+      - assets/SVG/Bell.svg
+      - assets/SVG/Kundli.svg
+      - assets/SVG/home.svg
+      - assets/SVG/Ai.svg
+      - assets/SVG/live.svg
+      - assets/SVG/ask.svg
+      - assets/SVG/history.svg
+      - assets/SVG/Astromall.svg
+      - assets/SVG/Horoscope.svg
+      - assets/SVG/Matching.svg
+      - assets/SVG/Arrow.svg
+      - assets/SVG/IllustrationLang.svg
+      - assets/SVG/IllustrationOTP.svg
+      - assets/SVG/apple.svg
+      - assets/SVG/facebook.svg
+      - assets/SVG/google.svg
+      - assets/SVG/changePasswordIllustration.svg
+      - assets/ringtone.mp3
