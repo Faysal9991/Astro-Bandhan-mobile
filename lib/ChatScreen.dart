@@ -1,3 +1,4 @@
+import 'package:astrologerapp/chatting/ChatListBloc.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
@@ -33,6 +34,7 @@ class _ChatScreenState extends State<ChatScreen> {
     super.initState();
     // Initialize socketService after the first frame
     WidgetsBinding.instance.addPostFrameCallback((_) {
+        context.read<ChatListBloc>().add(FetchChatList());
       socketService = Provider.of<SocketService>(context, listen: false);
       _connectToChatRoom();
     });

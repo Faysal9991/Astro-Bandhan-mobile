@@ -7,7 +7,6 @@ import '../CustomComponents/appbar.dart';
 import '../CustomComponents/custom_button.dart';
 import '../CustomComponents/textField.dart';
 import 'package:intl/intl.dart';
-import '../Home/BottomBar.dart';
 
 class CreateAccount extends StatefulWidget {
   const CreateAccount({super.key});

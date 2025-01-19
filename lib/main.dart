@@ -1,26 +1,26 @@
+import 'package:astrologerapp/Home/SocketService.dart';
 import 'package:astrologerapp/Home/TabScreen.dart';
-import 'package:astrologerapp/Home/home.dart';
+import 'package:astrologerapp/Home/audiocall/call_bloc.dart';
+import 'package:astrologerapp/Home/tab_bloc.dart';
+import 'package:astrologerapp/NotificationService.dart';
+import 'package:astrologerapp/Wallet/walate%20state/walate_state.dart';
+import 'package:astrologerapp/Wallet/walate%20state/withdraw_state.dart';
+import 'package:astrologerapp/Welcome/splash.dart';
+import 'package:astrologerapp/chat_provider.dart';
+import 'package:astrologerapp/chatting/ChatListBloc.dart';
+import 'package:astrologerapp/chatting/NotificationHandler.dart';
+import 'package:astrologerapp/chatting/chat_repository.dart';
+import 'package:astrologerapp/dio/dio_client.dart';
 import 'package:astrologerapp/helper/navigator_helper.dart';
+import 'package:astrologerapp/userState/user_state.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'Home/BottomBar.dart';
-import 'Home/SocketService.dart';
-import 'Home/audiocall/call_bloc.dart';
-import 'Home/tab_bloc.dart';
-import 'NotificationService.dart';
-import 'Welcome/splash.dart';
-import 'chat_provider.dart';
-import 'chatting/ChatListBloc.dart';
-import 'chatting/NotificationHandler.dart';
-import 'chatting/chat_repository.dart';
-import 'dio/dio_client.dart'; // Import the DioClient singleton class
+// ... other imports remain the same
 
 Future<void> main() async {
-
-
   WidgetsFlutterBinding.ensureInitialized();
 
   // Initialize DioClient
@@ -35,7 +35,6 @@ Future<void> main() async {
 }
 
 class MyApp extends StatelessWidget {
-
   final bool isLoggedIn;
   final String? userId;
 
@@ -43,56 +42,67 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
+    
     final callBloc = CallBloc();
 
-    return MultiProvider(
+    return MultiBlocProvider(
       providers: [
         BlocProvider<TabBloc>(
           create: (context) => TabBloc(),
         ),
-        BlocProvider(create: (_) => callBloc),
+        BlocProvider<CallBloc>(
+          create: (_) => callBloc,
+        ),
         BlocProvider<ChatListBloc>(
-          create: (context) => ChatListBloc(ChatRepository(Dio()))..add(FetchChatList()),
+          create: (context) =>
+              ChatListBloc(ChatRepository(Dio()))..add(FetchChatList()),
         ),
-        // Provide NotificationService
-        Provider<NotificationService>(
-          create: (_) => NotificationService(),
+        // Add UserCubit as BlocProvider instead of ChangeNotifierProvider
+        BlocProvider<UserCubit>(
+          create: (context) => UserCubit(),
         ),
-
-        // Provide ChatProvider
-        ChangeNotifierProvider<ChatProvider>(
-          create: (_) => ChatProvider(),
+         BlocProvider<WalateCubit>(
+          create: (context) => WalateCubit(),
         ),
-
-        ChangeNotifierProvider(
-          create: (_) => NotificationHandler(),
-        ),
-
-
-        // Provide SocketService with dependencies
-        ProxyProvider<NotificationService, SocketService>(
-          update: (_, notificationService, previousSocketService) {
-            final callBloc = CallBloc();
-            final socketService = previousSocketService ?? SocketService(userId ?? "", notificationService,callBloc);
-            if (!socketService.socket.connected) {
-              socketService.connect(userId ?? "",context); // Connect the socket
-            }
-            return socketService;
-          },
-          dispose: (_, socketService) => socketService.disconnect(),
+           BlocProvider<WithdrawCubit>(
+          create: (context) => WithdrawCubit(),
         ),
       ],
-      child: MaterialApp(
-        navigatorKey: Helper.navigatorKey,
-        debugShowCheckedModeBanner: false,
-        theme: ThemeData(
-          primarySwatch: Colors.blue,
-          scaffoldBackgroundColor: Colors.transparent,
+      child: MultiProvider(
+        providers: [
+          // Regular providers for non-bloc state management
+          Provider<NotificationService>(
+            create: (_) => NotificationService(),
+          ),
+          ChangeNotifierProvider<ChatProvider>(
+            create: (_) => ChatProvider(),
+          ),
+          ChangeNotifierProvider<NotificationHandler>(
+            create: (_) => NotificationHandler(),
+          ),
+          // Socket service with dependencies
+          ProxyProvider<NotificationService, SocketService>(
+            update: (_, notificationService, previousSocketService) {
+              final socketService = previousSocketService ??
+                  SocketService(userId ?? "", notificationService, callBloc);
+              if (!socketService.socket.connected) {
+                socketService.connect(userId ?? "", context);
+              }
+              return socketService;
+            },
+            dispose: (_, socketService) => socketService.disconnect(),
+          ),
+        ],
+        child: MaterialApp(
+          navigatorKey: Helper.navigatorKey,
+          debugShowCheckedModeBanner: false,
+          theme: ThemeData(
+            primarySwatch: Colors.blue,
+            scaffoldBackgroundColor: Colors.transparent,
+          ),
+          home: isLoggedIn ? const TabScreen() : const SplashScreen(),
         ),
-        home: isLoggedIn ?  TabScreen() : const SplashScreen(),
       ),
     );
   }
-
 }

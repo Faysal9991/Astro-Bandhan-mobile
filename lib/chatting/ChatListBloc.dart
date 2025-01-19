@@ -53,6 +53,7 @@ class ChatListBloc extends Bloc<ChatListEvent, ChatListState> {
       try {
         await Future.delayed(Duration(seconds: 1));
         final chatRooms = await chatRepository.fetchChatRooms();
+        print(" api response =============>${chatRooms}");
         emit(ChatListLoaded(
           chatRooms: List.from(chatRooms),
           version: DateTime.now().millisecondsSinceEpoch,

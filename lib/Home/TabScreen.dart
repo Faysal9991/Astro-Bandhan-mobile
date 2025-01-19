@@ -6,9 +6,12 @@ import 'package:astrologerapp/Home/audiocall/widget/custom_container.dart';
 import 'package:astrologerapp/Home/tab_bloc.dart';
 import 'package:astrologerapp/Home/tab_event.dart';
 import 'package:astrologerapp/Home/tab_state.dart';
+import 'package:astrologerapp/Wallet/wallet_screen.dart';
 import 'package:astrologerapp/chatting/ChatListScreen.dart';
 import 'package:astrologerapp/helper/navigator_helper.dart';
+import 'package:astrologerapp/userState/user_state.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
 
 class TabScreen extends StatefulWidget {
@@ -20,6 +23,15 @@ class TabScreen extends StatefulWidget {
 
 class _TabScreenState extends State<TabScreen> {
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
+  @override
+  void initState() {
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      final userCubit = context.read<UserCubit>();
+
+      userCubit.userinfo();
+    });
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -33,226 +45,259 @@ class _TabScreenState extends State<TabScreen> {
     return Scaffold(
       key: _scaffoldKey, // Add this line to connect the GlobalKey
       backgroundColor: Color(0xff0F0F55),
-      drawer: CustomDrawer(),
+      drawer: BlocBuilder<UserCubit, UserState>(builder: (context, state) {
+        return CustomDrawer(
+          userState: state,
+        );
+      }),
 
-      body: SafeArea(
-        child: Padding(
-          padding: const EdgeInsets.only(left: 15, right: 15),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.start,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            spacing: 15,
+      body: BlocBuilder<UserCubit, UserState>(builder: (context, state) {
+     
+        if (state.isLoading) {
+          return Column(
             children: [
-              Row(
+              Center(child: CircularProgressIndicator()),
+            ],
+          );
+        }
+        if (state.isSuccess) {
+          return SafeArea(
+            child: Padding(
+              padding: const EdgeInsets.only(left: 15, right: 15),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                spacing: 15,
                 children: [
-                  glassContainer(
-                      isBorder: false,
-                      height: 30,
-                      width: 88,
-                      context,
-                      child: Padding(
-                        padding: const EdgeInsets.all(4.0),
-                        child: Row(
-                          children: [
-                            Container(
-                              height: 20,
-                              width: 20,
-                              decoration: BoxDecoration(
-                                  color: Colors.white, shape: BoxShape.circle),
-                            ),
-                            const SizedBox(width: 5),
-                            const Text(
-                              "Offline",
-                              style: TextStyle(
-                                color: Colors.white,
-                                fontFamily: 'Inter',
-                                fontSize: 16,
-                                fontStyle: FontStyle.normal,
-                                fontWeight: FontWeight.w400,
-                              ),
-                            ),
-                          ],
-                        ),
-                      )),
-                  Spacer(),
-                  IconButton(
-                    icon: SvgPicture.asset(
-                      "assets/SVG/Bell.svg",
-                      height: 22,
-                    ),
-                    onPressed: () {
-                      // Handle bell icon press
-                    },
-                  ),
-                  IconButton(
-                    icon: SvgPicture.asset(
-                      "assets/SVG/Menu.svg",
-                      height: 22,
-                    ),
-                    onPressed: () {
-                      _scaffoldKey.currentState?.openDrawer();
-                    },
-                  ),
-                ],
-              ),
-              glassContainer(context,
-                  height: 122,
-                  child: Padding(
-                    padding: const EdgeInsets.all(20.0),
-                    child: Row(
+                 Row(
                       children: [
-                        SvgPicture.asset(
-                          "assets/SVG/doller.svg",
-                          height: 64,
-                          width: 51,
-                        ),
+                        glassContainer(
+                            isBorder: false,
+                            height: 30,
+                            width: 88,
+                            context,
+                            child: Padding(
+                              padding: const EdgeInsets.all(4.0),
+                              child: Row(
+                                children: [
+                                  Container(
+                                    height: 20,
+                                    width: 20,
+                                    decoration: BoxDecoration(
+                                        color:      userInfoModel.isOffline!?Colors.white:Colors.green,
+                                        shape: BoxShape.circle),
+                                  ),
+                                  const SizedBox(width: 5),
+                                   Text(
+                                   userInfoModel.isOffline!? "Offline":"online",
+                                    style: TextStyle(
+                                      color: Colors.white,
+                                      fontFamily: 'Inter',
+                                      fontSize: 16,
+                                      fontStyle: FontStyle.normal,
+                                      fontWeight: FontWeight.w400,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            )),
                         Spacer(),
-                        Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Text(
-                              "Available Balance",
-                              style: TextStyle(
-                                color: Colors.white,
-                                fontFamily: 'Inter',
-                                fontSize: 16,
-                                fontStyle: FontStyle.normal,
-                                fontWeight: FontWeight.w400,
-                              ),
-                            ),
-                            Text(
-                              "₹500.00",
-                              style: TextStyle(
-                                color: Colors.white,
-                                fontFamily: 'Poppins',
-                                fontSize: 32,
-                                fontStyle: FontStyle.normal,
-                                fontWeight: FontWeight.w500,
-                              ),
-                            ),
-                          ],
-                        )
+                        IconButton(
+                          icon: SvgPicture.asset(
+                            "assets/SVG/Bell.svg",
+                            height: 22,
+                          ),
+                          onPressed: () {
+                            // Handle bell icon press
+                          },
+                        ),
+                        IconButton(
+                          icon: SvgPicture.asset(
+                            "assets/SVG/Menu.svg",
+                            height: 22,
+                          ),
+                          onPressed: () {
+                            _scaffoldKey.currentState?.openDrawer();
+                          },
+                        ),
                       ],
                     ),
-                  )),
-              SizedBox(
-                height: 130,
-                child: ListView.builder(
-                    scrollDirection: Axis.horizontal,
-                    itemCount: icons.length,
-                    itemBuilder: (context, index) {
-                      // Convert map to list for indexed access
-                      final iconEntry = icons.entries.elementAt(index);
-
-                      return Padding(
-                        padding: EdgeInsets.only(left: index == 0 ? 0 : 15),
-                        child: Column(
-                          children: [
-                            InkWell(
-                              onTap: () {
-                                switch (index) {
-                                  // Use lowercase 'switch'
-                                  case 0:
-                                    Helper.toScreen(ChatListScreen());
-                                    break;
-                                  case 1:
-                                  //  Helper.toScreen(AudioCallScreen());
-                                    break;
-                                  case 2:
-                                   
-                                    break;
-                                  case 3:
-                                   
-                                    break;
-                                  default:
-                                    // Handle other cases or do nothing
-                                    break; // Optionally include a break in the default case
-                                }
-                              },
-                              child: glassContainer(context,
-                                  height: 70,
-                                  width: 70,
-                                  child: Padding(
-                                    padding: const EdgeInsets.all(20.0),
-                                    child: SvgPicture.asset(
-                                      iconEntry
-                                          .value, // Access the value (path)
-                                    ),
-                                  )),
-                            ),
-                            const SizedBox(
-                                height:
-                                    10), // Replace 'spacing' with proper spacing widget
-                            SizedBox(
-                              width: 70,
-                              child: Text(
-            
-                                textAlign: TextAlign.center,
-                                iconEntry.key, // Access the key (label)
-                                style: const TextStyle(
-                                  color: Colors.white,
-                                ),
+                 
+                  InkWell(
+                    onTap: () {
+                      Helper.toScreen(WalletScreen(presentblance: userInfoModel.walletBalance.toString(),));
+                    },
+                    child: glassContainer(context,
+                        height: 122,
+                        child: Padding(
+                          padding: const EdgeInsets.all(20.0),
+                          child: Row(
+                            children: [
+                              SvgPicture.asset(
+                                "assets/SVG/doller.svg",
+                                height: 64,
+                                width: 51,
                               ),
-                            )
+                              Spacer(),
+                              Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Text(
+                                    "Available Balance",
+                                    style: TextStyle(
+                                      color: Colors.white,
+                                      fontFamily: 'Inter',
+                                      fontSize: 16,
+                                      fontStyle: FontStyle.normal,
+                                      fontWeight: FontWeight.w400,
+                                    ),
+                                  ),
+                                  Text(
+                                    "₹${userInfoModel.walletBalance}",
+                                    style: TextStyle(
+                                      color: Colors.white,
+                                      fontFamily: 'Poppins',
+                                      fontSize: 32,
+                                      fontStyle: FontStyle.normal,
+                                      fontWeight: FontWeight.w500,
+                                    ),
+                                  ),
+                                ],
+                              )
+                            ],
+                          ),
+                        )),
+                  ),
+                  SizedBox(
+                    height: 130,
+                    child: ListView.builder(
+                        scrollDirection: Axis.horizontal,
+                        itemCount: icons.length,
+                        itemBuilder: (context, index) {
+                          // Convert map to list for indexed access
+                          final iconEntry = icons.entries.elementAt(index);
+
+                          return Padding(
+                            padding: EdgeInsets.only(left: index == 0 ? 0 : 15),
+                            child: Column(
+                              children: [
+                                InkWell(
+                                  onTap: () {
+                                    switch (index) {
+                                      // Use lowercase 'switch'
+                                      case 0:
+                                        Helper.toScreen(ChatListScreen());
+                                        break;
+                                      case 1:
+                                        //  Helper.toScreen(AudioCallScreen());
+                                        break;
+                                      case 2:
+                                        break;
+                                      case 3:
+                                        break;
+                                      default:
+                                        // Handle other cases or do nothing
+                                        break; // Optionally include a break in the default case
+                                    }
+                                  },
+                                  child: glassContainer(context,
+                                      height: 70,
+                                      width: 70,
+                                      child: Padding(
+                                        padding: const EdgeInsets.all(20.0),
+                                        child: SvgPicture.asset(
+                                          iconEntry
+                                              .value, // Access the value (path)
+                                        ),
+                                      )),
+                                ),
+                                const SizedBox(
+                                    height:
+                                        10), // Replace 'spacing' with proper spacing widget
+                                SizedBox(
+                                  width: 70,
+                                  child: Text(
+                                    textAlign: TextAlign.center,
+                                    iconEntry.key, // Access the key (label)
+                                    style: const TextStyle(
+                                      color: Colors.white,
+                                    ),
+                                  ),
+                                )
+                              ],
+                            ),
+                          );
+                        }),
+                  ),
+                  Text(
+                    textAlign: TextAlign.center,
+                    "Recent Activity:", // Access the key (label)
+                    style: const TextStyle(
+                      fontFamily: "Poppins",
+                      fontSize: 24,
+                      fontWeight: FontWeight.w500,
+                      color: Colors.white,
+                    ),
+                  ),
+                  glassContainer(
+                      height: 110,
+                      context,
+                      child: Padding(
+                        padding: const EdgeInsets.all(20.0),
+                        child: Column(
+                          spacing: 10,
+                          children: [
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                SvgPicture.asset(
+                                  "assets/SVG/Bell.svg",
+                                  height: 15,
+                                  width: 15,
+                                ),
+                                const SizedBox(width: 10),
+                                Text("Placerat interdum netus",
+                                    style: TextStyle(
+                                      fontWeight: FontWeight.w500,
+                                      fontSize: 16,
+                                      fontFamily: "Poppins",
+                                      color: Colors.white,
+                                    ))
+                              ],
+                            ),
+                            Text(
+                                textAlign: TextAlign.center,
+                                "Curabitur ridiculus dis massa eu arcu interdum posuere condimentum! Praesent maecenas.",
+                                style: TextStyle(
+                                  fontWeight: FontWeight.w400,
+                                  fontSize: 12,
+                                  fontFamily: "Inter",
+                                  color: Colors.white,
+                                ))
                           ],
                         ),
-                      );
-                    }),
+                      ))
+                ],
               ),
-             Text(
-            
-                                textAlign: TextAlign.center,
-                                "Recent Activity:" ,// Access the key (label)
-                                style: const TextStyle(
-                                  fontFamily: "Poppins",
-                                  fontSize: 24,
-                                  fontWeight: FontWeight.w500,
-                                  color: Colors.white,
-                                ),
-                              ),
-           
-           glassContainer(height:110,  context, child: Padding(
-             padding: const EdgeInsets.all(20.0),
-             child: Column(
-              spacing: 10,
-              children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    SvgPicture.asset("assets/SVG/Bell.svg",height: 15,width: 15,),
-                    const SizedBox(width: 10),
-                    Text(
-                      "Placerat interdum netus",
-                      style:  TextStyle(
-                        fontWeight: FontWeight.w500,
-                        fontSize: 16,
-                        fontFamily: "Poppins",
-                        color: Colors.white,))
-                  ],
-                ),
-                 Text(
-                  textAlign: TextAlign.center,
-                  "Curabitur ridiculus dis massa eu arcu interdum posuere condimentum! Praesent maecenas.",
-                            style: TextStyle(
-                              fontWeight: FontWeight.w400,
-                              fontSize: 12,
-                              fontFamily: "Inter",
-                              color: Colors.white,
-                            ))
-              ],
-             ),
-           ))
-            ],
-          ),
-        ),
-      ),
+            ),
+          );
+        } else {
+          return Container(
+            color: Colors.white,
+            child: Center(
+              child: Text("Loading..."),
+            ),
+          );
+        }
+      }),
     );
   }
 }
 
 class CustomDrawer extends StatelessWidget {
-  const CustomDrawer({super.key});
+  final UserState userState;
+  const CustomDrawer({super.key, required this.userState});
 
   @override
   Widget build(BuildContext context) {
@@ -278,16 +323,15 @@ class CustomDrawer extends StatelessWidget {
                       child: CircleAvatar(
                         radius: 24,
                         backgroundColor: Colors.grey[300],
-                        child: const Icon(Icons.person,
-                            size: 30, color: Colors.grey),
+                        child: Image.network("${userInfoModel.avatar}"),
                       ),
                     ),
-                    const Expanded(
+                     Expanded(
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
-                            'Sayan Paul',
+                            '${userInfoModel.name}',
                             style: TextStyle(
                               fontFamily: "Poppins",
                               color: Colors.white,
@@ -296,7 +340,7 @@ class CustomDrawer extends StatelessWidget {
                             ),
                           ),
                           Text(
-                            '+91 9988664422',
+                            '${userInfoModel.phone}',
                             style: TextStyle(
                               fontFamily: "Inter",
                               color: Colors.white,
