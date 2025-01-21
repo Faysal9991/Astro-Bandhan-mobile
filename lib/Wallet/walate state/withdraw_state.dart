@@ -1,6 +1,7 @@
 import 'package:astrologerapp/Wallet/model/bank_details.dart';
 import 'package:astrologerapp/dio/Constant.dart';
 import 'package:astrologerapp/dio/dio_client.dart';
+import 'package:astrologerapp/helper/navigator_helper.dart';
 import 'package:bloc/bloc.dart';
 import 'package:dio/dio.dart';
 import 'package:equatable/equatable.dart';
@@ -38,7 +39,11 @@ class WithdrawState extends Equatable {
 class WithdrawCubit extends Cubit<WithdrawState> {
   WithdrawCubit() : super(const WithdrawState());
 
-  Future<void> withdrawRequest({required int ammount, required String withdrawType, BankDetails ? bankDetails}) async {
+  Future<void> withdrawRequest(
+      {required int ammount,
+      required String withdrawType,
+      BankDetails? bankDetails,
+      String? upi}) async {
     final Dio dio = DioClient.instance.getDio();
 
     emit(state.copyWith(isLoading: true));
@@ -47,15 +52,15 @@ class WithdrawCubit extends Cubit<WithdrawState> {
       // Simulate API call
       await Future.delayed(const Duration(seconds: 2));
       final Map<String, dynamic> data = {
-        "astrologerId": prefs
-            .getString('astrologer_id'), // Replace with actual astrologer ID
-        "amount": ammount, // Amount to be withdrawn
-        "withdrawalType": withdrawType, // Either "upi" or "bank"
-        "bankDetails": bankDetails
+        "astrologerId": prefs.getString('astrologer_id'),
+        "amount": ammount,
+        "withdrawalType": withdrawType,
       };
-
+      withdrawType == "Bank"
+          ? data.addAll({"bankDetails": bankDetails})
+          : data.addAll({"upiId": upi});
       try {
-        final url = '${Base_url}astrobandhan/v1/user/get/wallet/history';
+        final url = '${Base_url}astrobandhan/v1/astrologer/create/withdrawl';
         print(url);
 
         emit(state.copyWith(isSuccess: null));
@@ -63,17 +68,15 @@ class WithdrawCubit extends Cubit<WithdrawState> {
         final response = await dio.post(url, data: data);
 
         final responseData = response.data;
+        Helper.showSnack(Helper.navigatorKey, "comming soon");
+        // if (response.statusCode == 200) {
+        //   emit(state.copyWith(isLoading: false, isSuccess: true));
+        // } else {
+        //   final message = responseData['message'];
 
-        if (response.statusCode == 200) {
-         
-
-          emit(state.copyWith(isLoading: false, isSuccess: true));
-        } else {
-          final message = responseData['message'];
-
-          emit(state.copyWith(isLoading: false, isSuccess: false));
-          emit(state.copyWith(errorMessage: message));
-        }
+        //   emit(state.copyWith(isLoading: false, isSuccess: false));
+        //   emit(state.copyWith(errorMessage: message));
+        // }
       } catch (error) {
         print('Error: $error');
 
@@ -91,6 +94,4 @@ class WithdrawCubit extends Cubit<WithdrawState> {
       emit(state.copyWith(isLoading: false, errorMessage: e.toString()));
     }
   }
-
-
 }

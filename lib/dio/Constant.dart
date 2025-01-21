@@ -7,7 +7,7 @@
 
 // String Base_url = "http://192.168.168.52:6000/";
 
-String Base_url = "http://ec2-15-206-90-111.ap-south-1.compute.amazonaws.com:8000/"; // s
+String Base_url = "https://www.devifai.in/"; // s
 
 // String Base_url = "http://192.168.43.36:6000/";
 

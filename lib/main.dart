@@ -6,6 +6,7 @@ import 'package:astrologerapp/NotificationService.dart';
 import 'package:astrologerapp/Wallet/walate%20state/walate_state.dart';
 import 'package:astrologerapp/Wallet/walate%20state/withdraw_state.dart';
 import 'package:astrologerapp/Welcome/splash.dart';
+import 'package:astrologerapp/chat_history_state.dart';
 import 'package:astrologerapp/chat_provider.dart';
 import 'package:astrologerapp/chatting/ChatListBloc.dart';
 import 'package:astrologerapp/chatting/NotificationHandler.dart';
@@ -67,6 +68,10 @@ class MyApp extends StatelessWidget {
            BlocProvider<WithdrawCubit>(
           create: (context) => WithdrawCubit(),
         ),
+        // BlocProvider<ChatHistoryCubit>(
+        //   create: (context) => ChatHistoryCubit(chatRoomId: '', userId: '', dio: Dio()),
+        // ),
+        
       ],
       child: MultiProvider(
         providers: [

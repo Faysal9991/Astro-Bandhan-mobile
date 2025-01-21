@@ -6,7 +6,6 @@ import 'dart:ui';
 
 import '../AccountState/CreateAccountState.dart';
 import '../Auth/LoginScreen.dart';
-import '../Auth/create_account.dart';
 
 class SplashScreen extends StatelessWidget {
   const SplashScreen({super.key});
@@ -39,30 +38,7 @@ class SplashScreen extends StatelessWidget {
                   Column(
                     children: [
                       const SizedBox(height: 150),
-                      Text(
-                        'ASTRO',
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontFamily: 'Poppins',
-                          fontSize: 96,
-                          fontStyle: FontStyle.normal,
-                          fontWeight: FontWeight.w900,
-                          height:
-                              50 / 96, // line-height divided by font-size
-                          leadingDistribution: TextLeadingDistribution.even,
-                        ),
-                      ),
-                      Text(
-                        'BANDHAN',
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontFamily: 'Poppins',
-                          fontSize: 66,
-                          fontStyle: FontStyle.normal,
-                          fontWeight: FontWeight.w500,
-                          leadingDistribution: TextLeadingDistribution.even,
-                        ),
-                      ),
+                    Image.asset("assets/img/rg.png"),
                       Container(
                      
                         width: double.infinity,
