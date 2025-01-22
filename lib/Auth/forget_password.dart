@@ -5,7 +5,6 @@ import '../forgot_pass/forget_password_bloc.dart';
 import '../forgot_pass/forget_password_event.dart';
 import '../forgot_pass/forget_password_state.dart';
 
-import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
 import 'otp_verify.dart';
